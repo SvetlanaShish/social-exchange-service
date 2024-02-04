@@ -1,0 +1,52 @@
+name: Deploy to Amazon EC2
+
+on:
+  push:
+    branches: [ "main" ]
+    paths:
+      - 'backend/**'
+
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - name: Setup SSH
+      uses: webfactory/ssh-agent@v0.5.3
+      with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+    - name: Deploy to EC2
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USERNAME }}@${{ secrets.HOST }} << EOF
+            APP_DIR=~/project
+            
+            if [ ! -d "\$APP_DIR" ]; then
+              mkdir -p "\$APP_DIR"
+              git clone https://github.com/SvetlanaShish/social-exchange-service.git "\$APP_DIR"
+            fi
+            
+            cd "\$APP_DIR"
+            git pull
+            
+            #Check poetry
+            if ! command -v poetry &> /dev/null
+            then
+              echo "Poetry not found, installing..."
+              curl -sSL https://install.python-poetry.org | python3 -
+              echo "export PATH=\$HOME/.local/bin:\$PATH" >> \$HOME/.bash_profile
+              source \$HOME/.bash_profile
+            fi
+
+            cd backend
+            poetry install
+            source \$(poetry env info --path)/bin/activate
+            
+            poetry run uvicorn app:app --host 0.0.0.0 --port 80 --reload
+          EOF
+
+    
