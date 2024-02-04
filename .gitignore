@@ -3,3 +3,5 @@ node_modules
 dist
 install-state.gz
 .DS_store
+.ses-venv
+__pycache__
