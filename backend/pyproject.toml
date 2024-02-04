@@ -2,8 +2,7 @@
 name = "social-exchange-service"
 version = "0.1.0"
 description = ""
-authors = ["None"]
-readme = "README.md"
+authors = [""]
 
 [tool.poetry.dependencies]
 python = "^3.10"
