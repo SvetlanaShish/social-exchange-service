@@ -47,7 +47,7 @@ jobs:
             cd backend
             poetry install --no-root
             
-            kill $(lsof -t -i:8080)
+            lsof -t -i :8080 | xargs -I {}  kill -9 {}
             nohup gunicorn -w 4 -k uvicorn.workers.UvicornWorker -b 0.0.0.0:8000 app:app > output.log 2>&1 &
           EOF
 
