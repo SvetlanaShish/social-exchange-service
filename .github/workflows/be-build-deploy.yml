@@ -40,15 +40,14 @@ jobs:
             then
               echo "Poetry not found, installing..."
               curl -sSL https://install.python-poetry.org | python3 -
-              echo "export PATH=\$HOME/.local/bin:\$PATH" >> \$HOME/.bash_profile
-              source \$HOME/.bash_profile
+              echo "export PATH=\$HOME/.local/bin:\$PATH" >> ~/.bashrc
+              source ~/.bashrc
             fi
 
             cd backend
-            poetry install
-            source \$(poetry env info --path)/bin/activate
+            poetry install --no-root
             
-            poetry run uvicorn app:app --host 0.0.0.0 --port 80 --reload
+            poetry run uvicorn app:app --host 0.0.0.0 --port 8080 --reload
           EOF
 
     
