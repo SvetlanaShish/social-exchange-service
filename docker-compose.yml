@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  raven-db:
+    image: ravendb/ravendb
+    ports:
+      - "8000:8000"
+      - "38888:38888"
+    environment:
+      - RAVEN_Setup_Mode=None
+      - RAVEN_Security_UnsecuredAccessAllowed=PublicNetwork
+
+  fastapi-app:
+    build:
+      context: .
+      dockerfile: backend.Dockerfile
+    ports:
+      - "8080:8080"
+    depends_on:
+      - raven-db
+    environment:
+      - RAVEN_DB_URL=http://raven-db:8000
+      - RAVEN_DB_NAME=FastAPIDB

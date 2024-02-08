@@ -8,6 +8,9 @@ authors = ["None"]
 python = "^3.10"
 fastapi = "^0.109.1"
 uvicorn = {extras = ["standard"], version = "^0.27.0.post1"}
+ravendb = "^5.2.5"
+passlib = "^1.7.4"
+python-multipart = "^0.0.7"
 
 
 [build-system]
